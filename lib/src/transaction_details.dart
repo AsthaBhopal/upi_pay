@@ -1,6 +1,7 @@
 import 'package:decimal/decimal.dart';
 import 'package:upi_pay/src/applications.dart';
 import 'package:upi_pay/src/exceptions.dart';
+import 'package:universal_io/io.dart' as io;
 
 class TransactionDetails {
   static const String _currency = 'INR';
@@ -32,15 +33,13 @@ class TransactionDetails {
     }
     final Decimal am = Decimal.parse(amount);
     if (am.scale > 2) {
-      throw InvalidAmountException(
-          'Amount must not have more than 2 digits after decimal point');
+      throw InvalidAmountException('Amount must not have more than 2 digits after decimal point');
     }
     if (am <= Decimal.zero) {
       throw InvalidAmountException('Amount must be greater than 1');
     }
     if (am > Decimal.fromInt(_maxAmount)) {
-      throw InvalidAmountException(
-          'Amount must be less then 1,00,000 since that is the upper limit '
+      throw InvalidAmountException('Amount must be less then 1,00,000 since that is the upper limit '
           'per UPI transaction');
     }
   }
@@ -60,18 +59,36 @@ class TransactionDetails {
   }
 
   String toString() {
-    String uri = 'upi://pay?pa=$payeeAddress'
-        '&pn=${Uri.encodeComponent(payeeName)}'
-        '&tr=$transactionRef'
-        '&tn=${Uri.encodeComponent(transactionNote!)}'
-        '&am=${amount.toString()}'
-        '&cu=$currency';
-    if (url != null && url!.isNotEmpty) {
-      uri += '&url=${Uri.encodeComponent(url!)}';
+    String uri = "";
+
+    if (io.Platform.isIOS) {
+      uri = '${upiApplication.discoveryCustomScheme}://upi/pay?pa=$payeeAddress'
+          '&pn=${Uri.encodeComponent(payeeName)}'
+          '&tr=$transactionRef'
+          '&tn=${Uri.encodeComponent(transactionNote!)}'
+          '&am=${amount.toString()}'
+          '&cu=$currency';
+      if (url != null && url!.isNotEmpty) {
+        uri += '&url=${Uri.encodeComponent(url!)}';
+      }
+      if (merchantCode.isNotEmpty) {
+        uri += '&mc=${Uri.encodeComponent(merchantCode)}';
+      }
+    } else {
+      uri = 'upi://pay?pa=$payeeAddress'
+          '&pn=${Uri.encodeComponent(payeeName)}'
+          '&tr=$transactionRef'
+          '&tn=${Uri.encodeComponent(transactionNote!)}'
+          '&am=${amount.toString()}'
+          '&cu=$currency';
+      if (url != null && url!.isNotEmpty) {
+        uri += '&url=${Uri.encodeComponent(url!)}';
+      }
+      if (merchantCode.isNotEmpty) {
+        uri += '&mc=${Uri.encodeComponent(merchantCode)}';
+      }
     }
-    if (merchantCode.isNotEmpty) {
-      uri += '&mc=${Uri.encodeComponent(merchantCode)}';
-    }
+
     return uri;
   }
 }
