@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:upi_pay/upi_pay.dart';
 
@@ -63,7 +62,7 @@ class _ScreenState extends State<Screen> {
     });
   }
 
-  Future<void> _onTap(ApplicationMeta app, BuildContext context) async {
+  Future<void> _onTap(ApplicationMeta app) async {
     final err = _validateUpiAddress(_upiAddressController.text);
     if (err != null) {
       setState(() {
@@ -77,35 +76,18 @@ class _ScreenState extends State<Screen> {
 
     final transactionRef = Random.secure().nextInt(1 << 32).toString();
     print("Starting transaction with id $transactionRef");
-    try {
-      final a = await UpiPay.initiateTransaction(
-        amount: _amountController.text,
-        app: app.upiApplication,
-        receiverName: 'Sharad',
-        receiverUpiAddress: _upiAddressController.text,
-        transactionRef: transactionRef,
-        transactionNote: 'UPI Payment',
-        // merchantCode: '7372',
-      );
-      print(a);
-      await showDialog(
-        context: context,
-        useRootNavigator: true,
-        builder: (_) => Container(
-          color: Colors.white,
-          child: Text(a.rawResponse),
-        ),
-      );
-    } catch (e, s) {
-      await showDialog(
-        context: context,
-        useRootNavigator: true,
-        builder: (_) => Container(
-          color: Colors.white,
-          child: Text(e.toString() + '\n' + s.toString()),
-        ),
-      );
-    }
+
+    final a = await UpiPay.initiateTransaction(
+      amount: _amountController.text,
+      app: app.upiApplication,
+      receiverName: 'Sharad',
+      receiverUpiAddress: _upiAddressController.text,
+      transactionRef: transactionRef,
+      transactionNote: 'UPI Payment',
+      // merchantCode: '7372',
+    );
+
+    print(a);
   }
 
   @override
@@ -117,8 +99,8 @@ class _ScreenState extends State<Screen> {
           _vpa(),
           if (_upiAddrError != null) _vpaError(),
           _amount(),
-          if (Platform.isIOS) _submitButton(context),
-          Platform.isAndroid ? _androidApps(context) : _iosApps(context),
+          if (Platform.isIOS) _submitButton(),
+          Platform.isAndroid ? _androidApps() : _iosApps(),
         ],
       ),
     );
@@ -196,14 +178,14 @@ class _ScreenState extends State<Screen> {
     );
   }
 
-  Widget _submitButton(BuildContext context) {
+  Widget _submitButton() {
     return Container(
       margin: EdgeInsets.only(top: 32),
       child: Row(
         children: <Widget>[
           Expanded(
             child: MaterialButton(
-              onPressed: () async => await _onTap(_apps[0], context),
+              onPressed: () async => await _onTap(_apps[0]),
               child: Text('Initiate Transaction',
                   style: Theme.of(context)
                       .textTheme
@@ -220,7 +202,7 @@ class _ScreenState extends State<Screen> {
     );
   }
 
-  Widget _androidApps(BuildContext context) {
+  Widget _androidApps() {
     return Container(
       margin: EdgeInsets.only(top: 32, bottom: 32),
       child: Column(
@@ -233,13 +215,13 @@ class _ScreenState extends State<Screen> {
               style: Theme.of(context).textTheme.bodyText1,
             ),
           ),
-          if (_apps != null) _appsGrid(_apps.map((e) => e).toList(), context),
+          if (_apps != null) _appsGrid(_apps.map((e) => e).toList()),
         ],
       ),
     );
   }
 
-  Widget _iosApps(BuildContext context) {
+  Widget _iosApps() {
     return Container(
       margin: EdgeInsets.only(top: 32, bottom: 32),
       child: Column(
@@ -260,7 +242,7 @@ class _ScreenState extends State<Screen> {
               style: Theme.of(context).textTheme.bodyText1,
             ),
           ),
-          if (_apps != null) _discoverableAppsGrid(context),
+          if (_apps != null) _discoverableAppsGrid(),
           Container(
             margin: EdgeInsets.only(top: 12, bottom: 12),
             child: Text(
@@ -268,33 +250,33 @@ class _ScreenState extends State<Screen> {
               style: Theme.of(context).textTheme.bodyText1,
             ),
           ),
-          if (_apps != null) _nonDiscoverableAppsGrid(context),
+          if (_apps != null) _nonDiscoverableAppsGrid(),
         ],
       ),
     );
   }
 
-  GridView _discoverableAppsGrid(BuildContext context) {
+  GridView _discoverableAppsGrid() {
     List<ApplicationMeta> metaList = [];
     _apps.forEach((e) {
       if (e.upiApplication.discoveryCustomScheme != null) {
         metaList.add(e);
       }
     });
-    return _appsGrid(metaList, context);
+    return _appsGrid(metaList);
   }
 
-  GridView _nonDiscoverableAppsGrid(BuildContext context) {
+  GridView _nonDiscoverableAppsGrid() {
     List<ApplicationMeta> metaList = [];
     _apps.forEach((e) {
       if (e.upiApplication.discoveryCustomScheme == null) {
         metaList.add(e);
       }
     });
-    return _appsGrid(metaList, context);
+    return _appsGrid(metaList);
   }
 
-  GridView _appsGrid(List<ApplicationMeta> apps, BuildContext context) {
+  GridView _appsGrid(List<ApplicationMeta> apps) {
     apps.sort((a, b) => a.upiApplication
         .getAppName()
         .toLowerCase()
@@ -312,9 +294,7 @@ class _ScreenState extends State<Screen> {
               key: ObjectKey(it.upiApplication),
               // color: Colors.grey[200],
               child: InkWell(
-                onTap: Platform.isAndroid
-                    ? () async => await _onTap(it, context)
-                    : null,
+                onTap: Platform.isAndroid ? () async => await _onTap(it) : null,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
