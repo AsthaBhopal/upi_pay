@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
 class UpiApplicationStatus {
   final UpiApplicationAndroidStatus androidStatus;
-  final UpiApplicationIosStatus? iosStatus;
+  final UpiApplicationIosStatus iosStatus;
   UpiApplicationStatus({
-    required this.androidStatus,
-    required this.iosStatus,
+    @required this.androidStatus,
+    @required this.iosStatus,
   });
 
   static final UpiApplicationStatus googlePay = UpiApplicationStatus(
@@ -613,10 +616,10 @@ final _iosStatusUnstableNoUpiScheme = UpiApplicationIosStatus(
 );
 
 class UpiApplicationAndroidStatus extends UpiApplicationPlatformStatus {
-  final NonMerchantPaymentAndroidStatus? nonMerchantPaymentStatus;
+  final NonMerchantPaymentAndroidStatus nonMerchantPaymentStatus;
   UpiApplicationAndroidStatus({
-    required UpiApplicationSetupStatus setup,
-    required UpiApplicationLinkingSupport linkingSupport,
+    @required UpiApplicationSetupStatus setup,
+    @required UpiApplicationLinkingSupport linkingSupport,
     bool warnsUnverifiedSourceForNonMerchant: false,
     this.nonMerchantPaymentStatus,
   }) : super(
@@ -627,10 +630,10 @@ class UpiApplicationAndroidStatus extends UpiApplicationPlatformStatus {
 }
 
 class UpiApplicationIosStatus extends UpiApplicationPlatformStatus {
-  final NonMerchantPaymentIosStatus? nonMerchantPaymentStatus;
+  final NonMerchantPaymentIosStatus nonMerchantPaymentStatus;
   UpiApplicationIosStatus({
-    required UpiApplicationSetupStatus setup,
-    required UpiApplicationLinkingSupport linkingSupport,
+    @required UpiApplicationSetupStatus setup,
+    @required UpiApplicationLinkingSupport linkingSupport,
     bool warnsUnverifiedSourceForNonMerchant: false,
     this.nonMerchantPaymentStatus,
   }) : super(
@@ -646,8 +649,8 @@ class UpiApplicationPlatformStatus {
   final bool warnsUnverifiedSourceForNonMerchant;
 
   UpiApplicationPlatformStatus({
-    required this.setup,
-    required this.linkingSupport,
+    @required this.setup,
+    @required this.linkingSupport,
     this.warnsUnverifiedSourceForNonMerchant: false,
   });
 }

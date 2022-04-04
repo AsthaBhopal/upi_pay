@@ -1,4 +1,6 @@
 import 'package:decimal/decimal.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:upi_pay/src/applications.dart';
 import 'package:upi_pay/src/exceptions.dart';
 import 'package:universal_io/io.dart' as io;
@@ -13,17 +15,17 @@ class TransactionDetails {
   final String transactionRef;
   final String currency;
   final Decimal amount;
-  final String? url;
+  final String url;
   final String merchantCode;
-  final String? transactionNote;
+  final String transactionNote;
 
   TransactionDetails({
-    required this.upiApplication,
-    required this.payeeAddress,
-    required this.payeeName,
-    required this.transactionRef,
+    @required this.upiApplication,
+    @required this.payeeAddress,
+    @required this.payeeName,
+    @required this.transactionRef,
     this.currency: TransactionDetails._currency,
-    required String amount,
+    @required String amount,
     this.url,
     this.merchantCode: '',
     this.transactionNote: 'UPI Transaction',
@@ -65,11 +67,11 @@ class TransactionDetails {
       uri = '${upiApplication.discoveryCustomScheme}://upi/pay?pa=$payeeAddress'
           '&pn=${Uri.encodeComponent(payeeName)}'
           '&tr=$transactionRef'
-          '&tn=${Uri.encodeComponent(transactionNote!)}'
+          '&tn=${Uri.encodeComponent(transactionNote)}'
           '&am=${amount.toString()}'
           '&cu=$currency';
-      if (url != null && url!.isNotEmpty) {
-        uri += '&url=${Uri.encodeComponent(url!)}';
+      if (url != null && url.isNotEmpty) {
+        uri += '&url=${Uri.encodeComponent(url)}';
       }
       if (merchantCode.isNotEmpty) {
         uri += '&mc=${Uri.encodeComponent(merchantCode)}';
@@ -78,11 +80,11 @@ class TransactionDetails {
       uri = 'upi://pay?pa=$payeeAddress'
           '&pn=${Uri.encodeComponent(payeeName)}'
           '&tr=$transactionRef'
-          '&tn=${Uri.encodeComponent(transactionNote!)}'
+          '&tn=${Uri.encodeComponent(transactionNote)}'
           '&am=${amount.toString()}'
           '&cu=$currency';
-      if (url != null && url!.isNotEmpty) {
-        uri += '&url=${Uri.encodeComponent(url!)}';
+      if (url != null && url.isNotEmpty) {
+        uri += '&url=${Uri.encodeComponent(url)}';
       }
       if (merchantCode.isNotEmpty) {
         uri += '&mc=${Uri.encodeComponent(merchantCode)}';
