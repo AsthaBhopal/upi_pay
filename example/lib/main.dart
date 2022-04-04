@@ -27,13 +27,13 @@ class Screen extends StatefulWidget {
 }
 
 class _ScreenState extends State<Screen> {
-  String? _upiAddrError;
+  String _upiAddrError;
 
   final _upiAddressController = TextEditingController();
   final _amountController = TextEditingController();
 
   bool _isUpiEditable = false;
-  List<ApplicationMeta>? _apps;
+  List<ApplicationMeta> _apps;
 
   @override
   void initState() {
@@ -93,7 +93,7 @@ class _ScreenState extends State<Screen> {
         useRootNavigator: true,
         builder: (_) => Container(
           color: Colors.white,
-          child: Text(a.rawResponse!),
+          child: Text(a.rawResponse),
         ),
       );
     } catch (e, s) {
@@ -162,7 +162,7 @@ class _ScreenState extends State<Screen> {
     return Container(
       margin: EdgeInsets.only(top: 4, left: 12),
       child: Text(
-        _upiAddrError!,
+        _upiAddrError,
         style: TextStyle(color: Colors.red),
       ),
     );
@@ -203,11 +203,11 @@ class _ScreenState extends State<Screen> {
         children: <Widget>[
           Expanded(
             child: MaterialButton(
-              onPressed: () async => await _onTap(_apps![0], context),
+              onPressed: () async => await _onTap(_apps[0], context),
               child: Text('Initiate Transaction',
                   style: Theme.of(context)
                       .textTheme
-                      .button!
+                      .button
                       .copyWith(color: Colors.white)),
               color: Theme.of(context).colorScheme.secondary,
               height: 48,
@@ -233,7 +233,7 @@ class _ScreenState extends State<Screen> {
               style: Theme.of(context).textTheme.bodyText1,
             ),
           ),
-          if (_apps != null) _appsGrid(_apps!.map((e) => e).toList(), context),
+          if (_apps != null) _appsGrid(_apps.map((e) => e).toList(), context),
         ],
       ),
     );
@@ -276,7 +276,7 @@ class _ScreenState extends State<Screen> {
 
   GridView _discoverableAppsGrid(BuildContext context) {
     List<ApplicationMeta> metaList = [];
-    _apps!.forEach((e) {
+    _apps.forEach((e) {
       if (e.upiApplication.discoveryCustomScheme != null) {
         metaList.add(e);
       }
@@ -286,7 +286,7 @@ class _ScreenState extends State<Screen> {
 
   GridView _nonDiscoverableAppsGrid(BuildContext context) {
     List<ApplicationMeta> metaList = [];
-    _apps!.forEach((e) {
+    _apps.forEach((e) {
       if (e.upiApplication.discoveryCustomScheme == null) {
         metaList.add(e);
       }
@@ -338,7 +338,7 @@ class _ScreenState extends State<Screen> {
   }
 }
 
-String? _validateUpiAddress(String value) {
+String _validateUpiAddress(String value) {
   if (value.isEmpty) {
     return 'UPI VPA is required.';
   }
