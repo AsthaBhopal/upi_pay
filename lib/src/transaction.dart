@@ -19,7 +19,7 @@ class UpiTransactionHelper implements _PlatformTransactionHelperBase {
   Future<UpiTransactionResponse> transact(UpiMethodChannel upiMethodChannel,
       TransactionDetails transactionDetails) async {
     if (io.Platform.isAndroid || io.Platform.isIOS) {
-      return await helper!.transact(upiMethodChannel, transactionDetails);
+      return await helper.transact(upiMethodChannel, transactionDetails);
     }
     throw UnsupportedError(
         'UPI transaction is available only on Android and iOS');
@@ -37,7 +37,7 @@ class AndroidTransactionHelper implements _PlatformTransactionHelperBase {
   Future<UpiTransactionResponse> transact(UpiMethodChannel upiMethodChannel,
       TransactionDetails transactionDetails) async {
     print("Initiating transaction on Android");
-    String? responseString =
+    String responseString =
         await upiMethodChannel.initiateTransaction(transactionDetails);
     print("Response received $responseString");
     return UpiTransactionResponse.android(
@@ -56,7 +56,7 @@ class IosTransactionHelper implements _PlatformTransactionHelperBase {
   Future<UpiTransactionResponse> transact(UpiMethodChannel upiMethodChannel,
       TransactionDetails transactionDetails) async {
     try {
-      final bool? result = await upiMethodChannel.launch(transactionDetails);
+      final bool result = await upiMethodChannel.launch(transactionDetails);
       return UpiTransactionResponse.ios(result != null ? result : false);
     } catch (error, stack) {
       print('iOS UPI app launch failure: $error');
