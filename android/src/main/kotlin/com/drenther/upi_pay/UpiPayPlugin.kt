@@ -206,23 +206,23 @@ class UpiPayPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, AppCompatAc
     }
   }
 
-  /*
-  @SuppressWarnings("deprecation")
-  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
-    if (requestCodeNumber == requestCode && result != null) {
-      if (data != null) {
-        try {
-          val response = data.getStringExtra("response")!!
-          this.success(response)
-        } catch (ex: Exception) {
-          this.success("invalid_response")
-        }
-      } else {
-        this.success("user_cancelled")
-      }
-    }
-    return true
-  }
+  
+  // @SuppressWarnings("deprecation")
+  // override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
+  //   if (requestCodeNumber == requestCode && result != null) {
+  //     if (data != null) {
+  //       try {
+  //         val response = data.getStringExtra("response")!!
+  //         this.success(response)
+  //       } catch (ex: Exception) {
+  //         this.success("invalid_response")
+  //       }
+  //     } else {
+  //       this.success("user_cancelled")
+  //     }
+  //   }
+  //   return true
+  // }
 
   @SuppressWarnings("deprecation")
   companion object {
@@ -234,5 +234,5 @@ class UpiPayPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, AppCompatAc
       channel.setMethodCallHandler(plugin)
     }
   }
-   */
+   
 }
