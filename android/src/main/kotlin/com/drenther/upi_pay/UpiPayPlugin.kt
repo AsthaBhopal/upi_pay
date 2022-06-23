@@ -168,7 +168,7 @@ class UpiPayPlugin internal constructor(registrar: Registrar, channel: MethodCha
     @JvmStatic
     fun registerWith(registrar: Registrar) {
       val channel = MethodChannel(registrar.messenger(), "upi_pay")
-      val plugin = UpiPayPlugin(registrar, channel)
+      val plugin = UpiPayPlugin(registrar: registrar, channel: channel)
       registrar.addActivityResultListener(plugin)
       channel.setMethodCallHandler(plugin)
     }
