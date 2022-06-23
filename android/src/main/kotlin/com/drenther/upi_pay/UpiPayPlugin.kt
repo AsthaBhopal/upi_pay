@@ -15,8 +15,9 @@ import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.ActivityResultListener
 import io.flutter.plugin.common.PluginRegistry.Registrar
 import java.io.ByteArrayOutputStream
+import io.flutter.embedding.engine.plugins.FlutterPlugin
 
-class UpiPayPlugin internal constructor(registrar: Registrar, channel: MethodChannel) : MethodCallHandler, ActivityResultListener {
+class UpiPayPlugin internal constructor(registrar: Registrar) : MethodCallHandler, ActivityResultListener {
   private val activity = registrar.activity()
 
   private var result: Result? = null
@@ -97,12 +98,12 @@ class UpiPayPlugin internal constructor(registrar: Registrar, channel: MethodCha
     val packageManager = activity!!.packageManager
 
     try {
-      val activities = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+      val activities = packageManager!!.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
 
       // Convert the activities into a response that can be transferred over the channel.
       val activityResponse = activities.map {
         val packageName = it.activityInfo.packageName
-        val drawable = packageManager.getApplicationIcon(packageName)
+        val drawable = packageManager!!.getApplicationIcon(packageName)
 
         val bitmap = getBitmapFromDrawable(drawable)
         val icon = if (bitmap != null) {
@@ -166,10 +167,10 @@ class UpiPayPlugin internal constructor(registrar: Registrar, channel: MethodCha
   companion object {
     @JvmStatic
     fun registerWith(registrar: Registrar) {
-      val channel = MethodChannel(registrar.messenger(), "upi_pay")
-      val plugin = UpiPayPlugin(registrar, channel)
+//       val channel = MethodChannel(registrar.messenger())
+      val plugin = UpiPayPlugin(registrar)
       registrar.addActivityResultListener(plugin)
-      channel.setMethodCallHandler(plugin)
+      //channel.setMethodCallHandler(plugin)
     }
   }
 }
