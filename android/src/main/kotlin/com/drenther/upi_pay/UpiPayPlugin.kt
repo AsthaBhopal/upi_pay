@@ -170,7 +170,7 @@ class UpiPayPlugin internal constructor(registrar: Registrar) : MethodCallHandle
 //       val channel = MethodChannel(registrar.messenger())
       val plugin = UpiPayPlugin(registrar)
       registrar.addActivityResultListener(plugin)
-      channel.setMethodCallHandler(plugin)
+      //channel.setMethodCallHandler(plugin)
     }
   }
 }
