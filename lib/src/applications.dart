@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:universal_io/io.dart' as io;
 
 /// Represents a UPI payment application.
@@ -13,7 +11,7 @@ class UpiApplication {
 
   /// Value of `CFBundleIdentifier` property in `Info.plist` of the iOS version
   /// of a UPI app. Serves as the identifier on iOS.
-  final String iosBundleId;
+  final String? iosBundleId;
 
   /// Friendly and typically a shorter version of a UPI app's name.
   final String appName;
@@ -24,18 +22,18 @@ class UpiApplication {
   /// UPI app without ambiguity, we need any other unique custom scheme that the
   /// app implements. Any such unique custom scheme, if available, is stored in
   /// this attribute to be used for discovering this app.
-  final String discoveryCustomScheme;
+  final String? discoveryCustomScheme;
 
   UpiApplication({
-    @required this.androidPackageName,
+    required this.androidPackageName,
     this.iosBundleId,
-    @required this.appName,
+    required this.appName,
     this.discoveryCustomScheme,
   }) {
     if (io.Platform.isAndroid) {
       lookUpMap[this.androidPackageName] = this;
     } else if (this.iosBundleId != null) {
-      lookUpMap[this.iosBundleId] = this;
+      lookUpMap[this.iosBundleId!] = this;
     }
   }
 
@@ -564,7 +562,7 @@ class UpiApplication {
 
   /// Returns the platform-specific package name.
   String toString() {
-    return io.Platform.isAndroid ? androidPackageName : iosBundleId;
+    return io.Platform.isAndroid ? androidPackageName : iosBundleId!;
   }
 
   /// Returns app's name.
