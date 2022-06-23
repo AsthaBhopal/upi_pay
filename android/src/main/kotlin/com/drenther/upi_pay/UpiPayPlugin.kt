@@ -18,7 +18,7 @@ import java.io.ByteArrayOutputStream
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 
 class UpiPayPlugin internal constructor(registrar: Registrar, channel: MethodChannel) : MethodCallHandler, ActivityResultListener {
-  private val activity = registrar.activity()
+  private val activity = registrar?.activity()
 
   private var result: Result? = null
   private var requestCodeNumber = 201119
@@ -76,12 +76,12 @@ class UpiPayPlugin internal constructor(registrar: Registrar, channel: MethodCha
       val intent = Intent(Intent.ACTION_VIEW, uri)
       intent.setPackage(app)
 
-      if (intent.resolveActivity(activity.packageManager) == null) {
+      if (intent?.resolveActivity(activity?.packageManager) == null) {
         this.success("activity_unavailable")
         return
       }
 
-      activity.startActivityForResult(intent, requestCodeNumber)
+      activity?.startActivityForResult(intent, requestCodeNumber)
     } catch (ex: Exception) {
       Log.e("upi_pay", ex.toString())
       this.success("failed_to_open_app")
@@ -95,7 +95,7 @@ class UpiPayPlugin internal constructor(registrar: Registrar, channel: MethodCha
     val uri = uriBuilder.build()
     val intent = Intent(Intent.ACTION_VIEW, uri)
 
-    val packageManager = activity.packageManager
+    val packageManager = activity?.packageManager
 
     try {
       val activities = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
@@ -169,7 +169,7 @@ class UpiPayPlugin internal constructor(registrar: Registrar, channel: MethodCha
     fun registerWith(registrar: Registrar) {
       val channel = MethodChannel(registrar.messenger(), "upi_pay")
       val plugin = UpiPayPlugin(registrar, channel)
-      registrar.addActivityResultListener(plugin)
+      registrar?.addActivityResultListener(plugin)
       channel.setMethodCallHandler(plugin)
     }
   }
