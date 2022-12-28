@@ -75,12 +75,12 @@ class UpiPayPlugin internal constructor(registrar: Registrar, channel: MethodCha
       val intent = Intent(Intent.ACTION_VIEW, uri)
       intent.setPackage(app)
 
-      if (intent.resolveActivity(activity!!.packageManager) == null) {
+      if (activity?.packageManager?.let { intent.resolveActivity(it) } == null) {
         this.success("activity_unavailable")
         return
       }
 
-      activity!!.startActivityForResult(intent, requestCodeNumber)
+      activity.startActivityForResult(intent, requestCodeNumber)
     } catch (ex: Exception) {
       Log.e("upi_pay", ex.toString())
       this.success("failed_to_open_app")
@@ -94,22 +94,18 @@ class UpiPayPlugin internal constructor(registrar: Registrar, channel: MethodCha
     val uri = uriBuilder.build()
     val intent = Intent(Intent.ACTION_VIEW, uri)
 
-    val packageManager = activity!!.packageManager
+    val packageManager = activity?.packageManager
 
     try {
-      val activities = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+      val activities = packageManager?.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
 
       // Convert the activities into a response that can be transferred over the channel.
-      val activityResponse = activities.map {
+      val activityResponse = activities?.map {
         val packageName = it.activityInfo.packageName
         val drawable = packageManager.getApplicationIcon(packageName)
 
         val bitmap = getBitmapFromDrawable(drawable)
-        val icon = if (bitmap != null) {
-          encodeToBase64(bitmap)
-        } else {
-          null
-        }
+        val icon = encodeToBase64(bitmap)
 
         mapOf(
                 "packageName" to packageName,
@@ -132,10 +128,10 @@ class UpiPayPlugin internal constructor(registrar: Registrar, channel: MethodCha
     return Base64.encodeToString(byteArrayOS.toByteArray(), Base64.NO_WRAP)
   }
 
-  private fun getBitmapFromDrawable(drawable: Drawable): Bitmap? {
+  private fun getBitmapFromDrawable(drawable: Drawable): Bitmap {
     val bmp: Bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
     val canvas = Canvas(bmp)
-    drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight())
+    drawable.setBounds(0, 0, canvas.width, canvas.height)
     drawable.draw(canvas)
     return bmp
   }
