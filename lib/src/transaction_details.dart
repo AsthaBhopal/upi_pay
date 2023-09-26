@@ -5,7 +5,7 @@ import 'package:universal_io/io.dart' as io;
 
 class TransactionDetails {
   static const String _currency = 'INR';
-  static const int _maxAmount = 100000;
+  static const int _maxAmount = 200000;
 
   final UpiApplication upiApplication;
   final String payeeAddress;
