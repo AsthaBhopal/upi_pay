@@ -38,12 +38,10 @@ class _ScreenState extends State<Screen> {
   void initState() {
     super.initState();
 
-    _amountController.text =
-        (Random.secure().nextDouble() * 10).toStringAsFixed(2);
+    _amountController.text = (Random.secure().nextDouble() * 10).toStringAsFixed(2);
 
     Future.delayed(Duration(milliseconds: 0), () async {
-      _apps = await UpiPay.getInstalledUpiApplications(
-          statusType: UpiApplicationDiscoveryAppStatusType.all);
+      _apps = await UpiPay.getInstalledUpiApplications(statusType: UpiApplicationDiscoveryAppStatusType.all);
       setState(() {});
     });
   }
@@ -57,8 +55,7 @@ class _ScreenState extends State<Screen> {
 
   void _generateAmount() {
     setState(() {
-      _amountController.text =
-          (Random.secure().nextDouble() * 10).toStringAsFixed(2);
+      _amountController.text = (Random.secure().nextDouble() * 10).toStringAsFixed(2);
     });
   }
 
@@ -187,14 +184,10 @@ class _ScreenState extends State<Screen> {
             child: MaterialButton(
               onPressed: () async => await _onTap(_apps![0]),
               child: Text('Initiate Transaction',
-                  style: Theme.of(context)
-                      .textTheme
-                      .button!
-                      .copyWith(color: Colors.white)),
-              color: Theme.of(context).accentColor,
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(color: Colors.white)),
+              color: Theme.of(context).colorScheme.secondary,
               height: 48,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
             ),
           ),
         ],
@@ -212,7 +205,7 @@ class _ScreenState extends State<Screen> {
             margin: EdgeInsets.only(bottom: 12),
             child: Text(
               'Pay Using',
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
           if (_apps != null) _appsGrid(_apps!.map((e) => e).toList()),
@@ -232,14 +225,14 @@ class _ScreenState extends State<Screen> {
             child: Text(
               'One of these will be invoked automatically by your phone to '
               'make a payment',
-              style: Theme.of(context).textTheme.bodyText2,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
           Container(
             margin: EdgeInsets.only(bottom: 12),
             child: Text(
               'Detected Installed Apps',
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
           if (_apps != null) _discoverableAppsGrid(),
@@ -247,7 +240,7 @@ class _ScreenState extends State<Screen> {
             margin: EdgeInsets.only(top: 12, bottom: 12),
             child: Text(
               'Other Supported Apps (Cannot detect)',
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
           if (_apps != null) _nonDiscoverableAppsGrid(),
@@ -277,10 +270,8 @@ class _ScreenState extends State<Screen> {
   }
 
   GridView _appsGrid(List<ApplicationMeta> apps) {
-    apps.sort((a, b) => a.upiApplication
-        .getAppName()
-        .toLowerCase()
-        .compareTo(b.upiApplication.getAppName().toLowerCase()));
+    apps.sort(
+        (a, b) => a.upiApplication.getAppName().toLowerCase().compareTo(b.upiApplication.getAppName().toLowerCase()));
     return GridView.count(
       crossAxisCount: 4,
       shrinkWrap: true,
