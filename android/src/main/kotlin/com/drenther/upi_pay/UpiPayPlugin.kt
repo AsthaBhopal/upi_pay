@@ -178,15 +178,4 @@ class UpiPayPlugin : MethodCallHandler, PluginRegistry.ActivityResultListener, F
     override fun onDetachedFromActivity() {
         activity = null
     }
-
-    companion object {
-        @JvmStatic
-        fun registerWith(registrar: Registrar) {
-            val channel = MethodChannel(registrar.messenger(), "upi_pay")
-            val plugin = UpiPayPlugin()
-            plugin.channel = channel
-            channel.setMethodCallHandler(plugin)
-            registrar.addActivityResultListener(plugin)
-        }
-    }
 }
